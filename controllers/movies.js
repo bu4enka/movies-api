@@ -1,13 +1,30 @@
 const { readFile, writeFile } = require('fs').promises
+const Sequelize = require('sequelize')
+const path = require('path');
 const importFile = require('../middleware/importFile');
 const Actor = require('../models/Actor');
 const { Movie, Movie_Cast } = require('../models/Movie')
-const path = require('path')
+
+const Op = Sequelize.Op
 
 const getAllMovies = async (req, res) => {
   console.log(req.session);
-  const movies = await Movie.findAll();
-  res.status(200).json(movies)
+  const { sort, name, title } = req.query
+  const options = {}
+
+  if (sort !== 'undefined' && sort === 'true') {
+    options.order = [['title', 'ASC']]
+  }
+  if (typeof name !== 'undefined' && name.length > 0) {
+    options.include = { model: Actor, where: { name: { [Op.like]: `%${name}%` } } }
+  }
+  if (typeof title !== 'undefined' && title.length > 0) {
+    options.where = { title: { [Op.like]: `%${title}%` } }
+  }
+
+  const movies = await Movie.findAll(options);
+
+  res.status(200).json({data: movies, status: 1})
 }
 
 const getMovie = async (req, res) => {
@@ -32,7 +49,7 @@ const getMovie = async (req, res) => {
       })
   }
 
-  res.status(200).json(movie)
+  res.status(200).json({data: movie, status: 1})
 }
 
 const updateMovie = async (req, res) => {
@@ -111,11 +128,14 @@ const createMovie = async (req, res) => {
       })
   }
 
-  res.status(201).json({ status: 1 })
+  res.status(201).json({ data: movie, status: 1 })
 }
 
 const importMovies = async (req, res) => {
   const movies = await importFile(path.join(__dirname, '..', 'content', req.file.filename))
+
+  //ignoreDuplicates doesn't spread on Actor and Movie_Cast tables, that's why I decided to write data via foreach loops 
+
   await Movie.bulkCreate(movies, {
     // include: Actor,
     ignoreDuplicates: true,
@@ -129,7 +149,7 @@ const importMovies = async (req, res) => {
     const addedActors = await Actor.findAll({ where: { name: [movie.actors.map(x => x.name)] } })
     addedActors.forEach(async (actor) => {
       const movId = addedMovies.find(x => x.title === movie.title).id
-      await Movie_Cast.create({ movieId: movId, actorId: actor.dataValues.id })
+      await Movie_Cast.create({ movieId: movId, actorId: actor.dataValues.id }, { ignoreDuplicates: true })
     })
   })
 

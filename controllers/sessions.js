@@ -31,7 +31,7 @@ const createSession = async (req, res) => {
   const token = user.createJwt()
   res.set('Authorization', `Bearer ${token}`)
   res.cookie('token', token, { maxAge: 60000 })
-  res.redirect(`http://localhost:${process.env.APP_PORT}/api/v1/movies/import/static`)
+  res.json({token}).redirect(`http://localhost:${process.env.APP_PORT}/api/v1/movies/import/static`)
 }
 
 module.exports = { createSession }
