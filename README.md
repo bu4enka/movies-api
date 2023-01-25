@@ -13,7 +13,7 @@ Or you can clone this repo, install required modules via `npm i` and run the app
 This is a simple Node.js REST API with Express.js framework.
 SQLite database is used to store the data and Sequlize is used to desribe entites and relations between them.
 
-Routes:
+# Routes:
 
 GET    api/v1/movies       - get all movies stored in db. You can additionaly use some query params: 
   - sort -- if true, it'll sort movies alphabeticaly. If fasle - nothing happens
