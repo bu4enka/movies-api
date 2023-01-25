@@ -32,7 +32,6 @@ const createSession = async (req, res) => {
   res.set('Authorization', `Bearer ${token}`)
   res.cookie('token', token, { maxAge: 60000 })
   res.redirect(`http://localhost:${process.env.APP_PORT}/api/v1/movies/import/static`)
-  // res.status(200).json({ token, status: 1 })
 }
 
 module.exports = { createSession }
