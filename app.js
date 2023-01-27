@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 
 
 const authUser = require('./middleware/auth')
-
+const errorHandlerMiddleware = require('./middleware/error-handler')
 const moviesRouter = require('./routes/movies')
 const sessionsRouter = require('./routes/sessions')
 const usersRouter = require('./routes/users')
@@ -30,6 +30,8 @@ app.use(cookieParser())
 app.use('/api/v1/users', usersRouter)
 app.use('/api/v1/sessions', sessionsRouter)
 app.use('/api/v1/movies', authUser, moviesRouter)
+
+app.use(errorHandlerMiddleware)
 
 const port = process.env.APP_PORT || 3000
 

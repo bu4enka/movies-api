@@ -29,9 +29,15 @@ const createSession = async (req, res) => {
   })
 
   const token = user.createJwt()
+  const jwtLifetime = process.env.JWT_LIFETIME * 1000 * 60 //in minutes
   res.set('Authorization', `Bearer ${token}`)
-  res.cookie('token', token, { maxAge: 60000 })
-  res.json({token}).redirect(`http://localhost:${process.env.APP_PORT}/api/v1/movies/import/static`)
+  res.cookie('token', token, { maxAge: jwtLifetime })
+
+  //If Postman - return json 
+  if (typeof req.get('origin') === 'undefined') {
+    return res.status(200).json({ data: { token }, status: 1 })
+  }
+  res.redirect(`http://localhost:${process.env.APP_PORT}/api/v1/movies/import/static`)
 }
 
 module.exports = { createSession }

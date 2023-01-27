@@ -1,4 +1,6 @@
 const fs = require('fs').promises
+const p = require('path')
+const { EmptyFileError } = require('../errors/file-import')
 
 const importFile = async (path) => {
   const file = await fs.readFile(path, ('utf-8'))
@@ -9,6 +11,9 @@ const importFile = async (path) => {
 
 const parseFile = async (file) => {
   const arr = file.split('\n').filter(x => x.length > 0);
+  if (arr.length < 1) {
+    throw new EmptyFileError('')
+  }
   let returnArr = [];
   for (var i = 0; i < arr.length; i += 4) {
     const chunk = arr.slice(i, i + 4)

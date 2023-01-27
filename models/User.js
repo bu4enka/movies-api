@@ -23,7 +23,7 @@ const User = sequelize.define('user', {
     validate: {
       is: {
         args: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        msg: "Please, provide a valid email"
+        msg: "EMAIL_NOT_VALID"
       }
     }
   },
@@ -31,13 +31,21 @@ const User = sequelize.define('user', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [3, 50]
+      notEmpty: {
+        args: true,
+        msg: 'EMPTY_NAME'
+      },
     }
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-    min: 4
+    validate: {
+      min: {
+        args: 4,
+        msg: "PASSWORD_MIN_LENGTH"
+      }
+    }
   }
 })
 
@@ -48,7 +56,7 @@ User.beforeCreate(async (user, options) => {
 
 User.prototype.createJwt = function () {
   return jwt.sign({ userId: this.id, name: this.name }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME
+    expiresIn: process.env.JWT_LIFETIME * 1000 * 60
   })
 }
 

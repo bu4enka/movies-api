@@ -1,8 +1,18 @@
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
+const path = require('path')
+const FileImportError = require('../errors/file-import');
 
-const upload = multer({ dest: './content/' });
+const upload = multer({
+  dest: './content/',
+  fileFilter: function (req, file, cb) {
+    let ext = path.extname(file.originalname);
+    if (ext !== '.txt') return cb(new FileImportError(''))
+   
+    cb(null, true)
+  }
+});
 const type = upload.single('movie_file');
 
 const {
@@ -13,7 +23,7 @@ const {
   createMovie,
   importMovies,
   importMoviesPage
-} = require('../controllers/movies')
+} = require('../controllers/movies');
 
 router.route('/').post(createMovie).get(getAllMovies)//
 router.route('/:id').patch(updateMovie).get(getMovie).delete(deleteMovie)

@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
         fields: {
           token: "REQUIRED"
         },
-        code: "FORMAT_ERROR"
+        code: "TOKEN_REQUIRED"
       }
     })
   }
@@ -22,6 +22,7 @@ const auth = async (req, res, next) => {
     req.user = { userId: payload.userId, name: payload.name }
     next()
   } catch (error) {
+    console.log(error);
     res.status(401).json({
       status: 0,
       error: {
