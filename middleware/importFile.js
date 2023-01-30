@@ -10,7 +10,7 @@ const importFile = async (path) => {
 }
 
 const parseFile = async (file) => {
-  const arr = file.split('\n').filter(x => x.length > 0);
+  const arr = file.split('\n').map(x => x.replace('\r', '')).filter(x => x.length > 0);
   if (arr.length < 1) {
     throw new EmptyFileError('')
   }
@@ -25,7 +25,7 @@ const parseFile = async (file) => {
       }
       if (splitted[0].toLowerCase() === 'stars') {
         splitted[0] = 'actors'
-        splitted[1] = splitted[1].split(', ').map(x => { return { name: x } })
+        splitted[1] = splitted[1].split(', ').map(x => { return { name: x.trim() } })
       }
       return {
         ...acc,

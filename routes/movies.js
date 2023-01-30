@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const path = require('path')
-const FileImportError = require('../errors/file-import');
 
 const upload = multer({
   dest: './content/',
@@ -24,6 +23,7 @@ const {
   importMovies,
   importMoviesPage
 } = require('../controllers/movies');
+const { FileImportError } = require('../errors/file-import');
 
 router.route('/').post(createMovie).get(getAllMovies)//
 router.route('/:id').patch(updateMovie).get(getMovie).delete(deleteMovie)

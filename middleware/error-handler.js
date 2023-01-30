@@ -38,7 +38,12 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     return res.status(404).json(customError)
   }
 
-  return res.status(500).json(err)
+  if (err.name === 'DuplicateFileError') {
+    customError.code = err.message
+    return res.status(404).json(customError)
+  }
+
+  return res.status(500).json(err.message)
 }
 
 module.exports = errorHandlerMiddleware

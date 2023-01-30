@@ -22,7 +22,6 @@ const auth = async (req, res, next) => {
     req.user = { userId: payload.userId, name: payload.name }
     next()
   } catch (error) {
-    console.log(error);
     res.status(401).json({
       status: 0,
       error: {

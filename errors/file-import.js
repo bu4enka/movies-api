@@ -12,4 +12,11 @@ class EmptyFileError extends Error {
   }
 }
 
-module.exports = {FileImportError, EmptyFileError};
+class DuplicateFileError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DuplicateFileError";
+  }
+}
+
+module.exports = {FileImportError, EmptyFileError, DuplicateFileError};
