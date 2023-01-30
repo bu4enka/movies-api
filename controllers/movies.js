@@ -107,8 +107,7 @@ const createMovie = async (req, res) => {
   const regex = new RegExp(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/, 'g')
   const validateActors = mov.actors.filter(x => !x.match(regex))
 
-  if (validateActors) {
-    console.log(validateActors);
+  if (validateActors.length > 0) {
     throw new ActorNameError('ACTOR_NAME_NOT_VALID', validateActors);
   }
   mov.actors = mov.actors.map(x => {

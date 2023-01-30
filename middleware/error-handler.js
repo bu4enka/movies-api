@@ -1,5 +1,4 @@
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log(err)
   const customError = {
     status: 0,
     error: {
