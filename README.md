@@ -16,7 +16,8 @@ SQLite database is used to store the data and Sequlize is used to desribe entite
 # Routes:
 
 GET    api/v1/movies       - get all movies stored in db. You can additionaly use some query params: 
-  - sort -- if true, it'll sort movies alphabeticaly. If fasle - nothing happens
+  - sort -- accepts 2 values - either ASC or DESC
+  - sortField -- accepts field name which should be sorted. Possible values - id, title or year
   - title -- allows you to find a movie by it's title (or part of the title)
   - name -- allows you to find a movie where some actor stars
 
